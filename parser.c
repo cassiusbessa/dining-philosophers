@@ -1,4 +1,4 @@
-#include "philosophers.h"
+#include "philo.h"
 
 static int	ft_atoi(const char *str)
 {
@@ -60,6 +60,7 @@ t_arguments	parser(int argc, char **argv)
 {
 	t_arguments	arguments;
 
+	arguments.error = 0;
 	if (check_arguments(argc, argv) == -1)
 	{
 		arguments.error = 1;
