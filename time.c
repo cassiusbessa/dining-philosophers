@@ -50,10 +50,10 @@
 //     	return 31;
 // }
 
-int	time_stamp_in_ms(struct timeval *start)
+long	time_stamp_in_ms(struct timeval *start)
 {
 	struct timeval	tv;
-	int				time;
+	long				time;
 
 	gettimeofday(&tv, NULL);
 	time = (tv.tv_sec - start->tv_sec) * 1000 + (tv.tv_usec - start->tv_usec) / 1000;

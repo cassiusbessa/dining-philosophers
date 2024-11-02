@@ -7,7 +7,8 @@ CURSIVE		=	\e[33;3m
 SRCS =		main.c\
 					parser.c\
 					print.c\
-					time.c
+					time.c\
+					table.c
 
 
 philo = philo
