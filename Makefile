@@ -8,7 +8,8 @@ SRCS =		main.c\
 					parser.c\
 					print.c\
 					time.c\
-					table.c
+					table.c\
+					routine.c\
 
 
 philo = philo

@@ -50,14 +50,31 @@
 //     	return 31;
 // }
 
-long	time_stamp_in_ms(struct timeval *start)
+long long	time_stamp_in_usec(struct timeval *start)
 {
 	struct timeval	tv;
-	long				time;
+	long long				time;
 
 	gettimeofday(&tv, NULL);
-	time = (tv.tv_sec - start->tv_sec) * 1000 + (tv.tv_usec - start->tv_usec) / 1000;
-	return (time);
+	time = (tv.tv_sec - start->tv_sec) * 1000000 + (tv.tv_usec - start->tv_usec);
+	return time;
+}
+
+void smart_sleep(long long interval_in_ms, struct timeval *start)
+{
+	long long now;
+	long long target_time;
+
+	now = time_stamp_in_usec(start);
+	target_time = now + interval_in_ms * 1000;
+	while (now < target_time)
+	{
+		if (target_time - now > 42)
+			usleep(42);
+		else
+			usleep(target_time - now);
+		now = time_stamp_in_usec(start);
+	}
 }
 
 int	sleep_in_ms(int ms)

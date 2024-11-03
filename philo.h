@@ -6,7 +6,7 @@
 /*   By: cassius <cassius@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/11/01 21:47:20 by cassius           #+#    #+#             */
-/*   Updated: 2024/11/02 13:14:40 by cassius          ###   ########.fr       */
+/*   Updated: 2024/11/02 22:32:17 by cassius          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -18,11 +18,7 @@
 # include <stdio.h>
 # include <sys/time.h>
 # include <unistd.h>
-
-# define SECONDS_IN_MINUTE 60;
-# define SECONDS_IN_HOUR 3600;
-# define SECONDS_IN_DAY 86400;
-# define DAYS_IN_YEAR 365;
+# include <stdlib.h>
 
 typedef struct s_arguments {
 	int number_of_philosophers;
@@ -37,8 +33,8 @@ t_arguments	parser(int argc, char **argv);
 void	print_args(t_arguments args);
 
 int	sleep_in_ms(int ms);
-long	time_stamp_in_ms(struct timeval *start);
-void	print_current_time(struct timeval *tv_start);
+long long	time_stamp_in_usec(struct timeval *start);
+void	smart_sleep(long long interval, struct timeval *start);
 
 typedef struct s_table {
 	pthread_mutex_t	*forks;
@@ -48,6 +44,8 @@ typedef struct s_table {
 	struct timeval	tv_start;
 } t_table;
 
+int	init_table(t_table *table, t_arguments args);
+
 typedef struct s_philosopher {
     int							id;
     int							meals_eaten;
@@ -55,5 +53,9 @@ typedef struct s_philosopher {
     pthread_t				thread;
     struct s_table	*table;
 } t_philosopher;
+
+int		init_philosophers(t_philosopher *philosophers, t_table *table);
+void	destroy_table(t_table *table);
+void *philosopher_routine(void *arg);
 
 #endif

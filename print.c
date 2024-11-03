@@ -8,8 +8,3 @@ void	print_args(t_arguments args)
 	printf("time_to_sleep: %d\n", args.time_to_sleep);
 	printf("number_of_times_each_philosopher_must_eat: %d\n", args.number_of_times_each_philosopher_must_eat);
 }
-
-void	print_current_time(struct timeval *tv_start)
-{
-	printf("time_stamp_in_ms: %d\n", time_stamp_in_ms(tv_start));
-}
