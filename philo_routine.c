@@ -7,6 +7,8 @@ int try_take_forks(t_philosopher *philo)
 	int left_fork = philo->id - 1;
 	int right_fork = philo->id % philo->table->args.number_of_philosophers;
 
+	if (philo->table->args.number_of_philosophers == 1)
+		return 0;
 	pthread_mutex_lock(&philo->table->forks_status_mutex);
 	if (philo->table->forks_status[left_fork] == 0 && philo->table->forks_status[right_fork] == 0)
 	{

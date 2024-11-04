@@ -47,9 +47,6 @@ int	starvation_calculator(t_table *table, t_philosopher *philo)
 	pthread_mutex_lock(&philo->meal_mutex);
 	if (((long long)table->args.time_to_die) + 1 < (time_stamp_in_usec(&table->tv_start) - philo->last_meal_time) / 1000)
 	{
-		// pthread_mutex_lock(&table->print);
-		// printf("time to die: %d, last meal: %lld, current time: %lld, conditional: %lld\n", table->args.time_to_die, philo->last_meal_time, time_stamp_in_usec(&table->tv_start) / 1000, (time_stamp_in_usec(&table->tv_start) - philo->last_meal_time) / 1000);
-		// pthread_mutex_unlock(&table->print);
 		pthread_mutex_unlock(&philo->meal_mutex);
 		pthread_mutex_lock(&table->dead_mutex);
 		table->dead_flag = 1;
