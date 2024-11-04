@@ -6,7 +6,7 @@
 /*   By: cassius <cassius@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/11/01 21:47:20 by cassius           #+#    #+#             */
-/*   Updated: 2024/11/04 00:01:26 by cassius          ###   ########.fr       */
+/*   Updated: 2024/11/04 02:44:30 by cassius          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -34,7 +34,7 @@ void	print_args(t_arguments args);
 
 int	sleep_in_ms(int ms);
 long long	time_stamp_in_usec(struct timeval *start);
-void	smart_sleep(long long interval, struct timeval *start);
+
 
 typedef struct s_table {
 	pthread_mutex_t	*forks;
@@ -53,7 +53,7 @@ int	init_table(t_table *table, t_arguments args);
 typedef struct s_philosopher {
     int							id;
     int							meals_eaten;
-    long						last_meal_time;
+    long long				last_meal_time;
     pthread_t				thread;
     struct s_table	*table;
 		pthread_mutex_t	meal_mutex;
@@ -62,6 +62,8 @@ typedef struct s_philosopher {
 int		init_philosophers(t_philosopher *philosophers, t_table *table);
 void	destroy_table(t_table *table);
 void *philosopher_routine(void *arg);
+void	smart_sleep(long long interval, struct timeval *start, t_philosopher *philo);
+int	has_death(t_table *table, t_philosopher *philo);
 
 int	monitor(t_table *table, t_philosopher *philos);
 

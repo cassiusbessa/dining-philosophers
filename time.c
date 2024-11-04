@@ -60,14 +60,14 @@ long long	time_stamp_in_usec(struct timeval *start)
 	return time;
 }
 
-void smart_sleep(long long interval_in_ms, struct timeval *start)
+void smart_sleep(long long interval_in_ms, struct timeval *start, t_philosopher *philo)
 {
 	long long now;
 	long long target_time;
 
 	now = time_stamp_in_usec(start);
 	target_time = now + interval_in_ms * 1000;
-	while (now < target_time)
+	while (!has_death(philo->table, philo) && now < target_time)
 	{
 		if (target_time - now > 1)
 			usleep(1);

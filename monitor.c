@@ -18,11 +18,12 @@ int	monitor(t_table *table, t_philosopher *philos)
 			if (dead)
 			{
 				pthread_mutex_lock(&table->print);
-				printf("%lld %d died\n", time_stamp_in_usec(&table->tv_start) / 10000, dead);
+				printf("%lld %d died because last meals as eaten at %lld\n", time_stamp_in_usec(&table->tv_start) / 1000, dead, philos[i].last_meal_time / 1000);
 				pthread_mutex_unlock(&table->print);
 				return (dead);
 			}
-			dead = all_philos_max_meals_eaten(table, philos);
+			if (table->args.number_of_times_each_philosopher_must_eat > 0)
+				dead = all_philos_max_meals_eaten(table, philos);
 			if (dead)
 			{
 				pthread_mutex_lock(&table->dead_mutex);
@@ -44,8 +45,11 @@ int	monitor(t_table *table, t_philosopher *philos)
 int	starvation_calculator(t_table *table, t_philosopher *philo)
 {
 	pthread_mutex_lock(&philo->meal_mutex);
-	if (time_stamp_in_usec(&table->tv_start) - philo->last_meal_time >= table->args.time_to_die * 1000)
+	if (((long long)table->args.time_to_die) + 1 < (time_stamp_in_usec(&table->tv_start) - philo->last_meal_time) / 1000)
 	{
+		// pthread_mutex_lock(&table->print);
+		// printf("time to die: %d, last meal: %lld, current time: %lld, conditional: %lld\n", table->args.time_to_die, philo->last_meal_time, time_stamp_in_usec(&table->tv_start) / 1000, (time_stamp_in_usec(&table->tv_start) - philo->last_meal_time) / 1000);
+		// pthread_mutex_unlock(&table->print);
 		pthread_mutex_unlock(&philo->meal_mutex);
 		pthread_mutex_lock(&table->dead_mutex);
 		table->dead_flag = 1;

@@ -47,7 +47,7 @@ static int	check_arguments(int argc, char **argv)
 	}
 	if (!is_number(argv[1]) || !is_number(argv[2]) || !is_number(argv[3])
 		|| !is_number(argv[4]) || (argc == 6 && !is_number(argv[5]))
-		|| ft_atoi(argv[1]) < 2 || ft_atoi(argv[2]) < 0
+		|| ft_atoi(argv[1]) < 1 || ft_atoi(argv[2]) < 0
 		|| ft_atoi(argv[3]) < 0 || ft_atoi(argv[4]) < 0
 		|| (argc == 6 && ft_atoi(argv[5]) < 0))
 	{
@@ -73,5 +73,7 @@ t_arguments	parser(int argc, char **argv)
 	arguments.number_of_times_each_philosopher_must_eat = 0;
 	if (argc == 6)
 		arguments.number_of_times_each_philosopher_must_eat = ft_atoi(argv[5]);
+	else
+		arguments.number_of_times_each_philosopher_must_eat = -1;
 	return (arguments);
 }
