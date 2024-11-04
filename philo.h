@@ -6,7 +6,7 @@
 /*   By: cassius <cassius@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/11/01 21:47:20 by cassius           #+#    #+#             */
-/*   Updated: 2024/11/02 22:32:17 by cassius          ###   ########.fr       */
+/*   Updated: 2024/11/03 02:35:40 by cassius          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -38,6 +38,8 @@ void	smart_sleep(long long interval, struct timeval *start);
 
 typedef struct s_table {
 	pthread_mutex_t	*forks;
+	int							*forks_status;
+	pthread_mutex_t	forks_status_mutex;
 	pthread_mutex_t	print;
 	pthread_mutex_t	dead;
 	t_arguments			args;

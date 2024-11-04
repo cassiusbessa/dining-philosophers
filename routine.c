@@ -58,50 +58,44 @@
 
 int try_take_forks(t_philosopher *philo)
 {
-	int left_fork;
-	int right_fork;
+	int left_fork = philo->id - 1;
+	int right_fork = philo->id % philo->table->args.number_of_philosophers;
 
-	left_fork = philo->id - 1;
-	right_fork = philo->id % philo->table->args.number_of_philosophers;
-	if (philo->id % 2 == 0)
+	pthread_mutex_lock(&philo->table->forks_status_mutex);
+	if (philo->table->forks_status[left_fork] == 0 && philo->table->forks_status[right_fork] == 0)
 	{
-		if (pthread_mutex_trylock(&philo->table->forks[right_fork]) == 0)
+		philo->table->forks_status[left_fork] = 1;
+		philo->table->forks_status[right_fork] = 1;
+		pthread_mutex_unlock(&philo->table->forks_status_mutex);
+		if (philo->id % 2 == 0)
 		{
-			if (pthread_mutex_trylock(&philo->table->forks[left_fork]) == 0)
-			{
-				pthread_mutex_lock(&philo->table->print);
-				printf("%lld %d has taken a fork\n", time_stamp_in_usec(&philo->table->tv_start) / 10000, philo->id);
-				printf("%lld %d has taken a fork\n", time_stamp_in_usec(&philo->table->tv_start) / 10000, philo->id);
-				pthread_mutex_unlock(&philo->table->print);
-				return 1;
-			}
-			else
-				pthread_mutex_unlock(&philo->table->forks[right_fork]);
+			pthread_mutex_lock(&philo->table->forks[right_fork]);
+			pthread_mutex_lock(&philo->table->forks[left_fork]);
 		}
-	}
-	else 
-	{
-		if (pthread_mutex_trylock(&philo->table->forks[left_fork]) == 0)
+		else
 		{
-			if (pthread_mutex_trylock(&philo->table->forks[right_fork]) == 0)
-			{
-				pthread_mutex_lock(&philo->table->print);
-				printf("%lld %d has taken a fork\n", time_stamp_in_usec(&philo->table->tv_start) / 10000, philo->id);
-				printf("%lld %d has taken a fork\n", time_stamp_in_usec(&philo->table->tv_start) / 10000, philo->id);
-				pthread_mutex_unlock(&philo->table->print);
-				return 1; 
-			} 
-			else
-				pthread_mutex_unlock(&philo->table->forks[left_fork]);
-			}
+			pthread_mutex_lock(&philo->table->forks[left_fork]);
+			pthread_mutex_lock(&philo->table->forks[right_fork]);
+		}
+		pthread_mutex_lock(&philo->table->print);
+		printf("%lld %d has taken a fork\n", time_stamp_in_usec(&philo->table->tv_start) / 10000, philo->id);
+		printf("%lld %d has taken a fork\n", time_stamp_in_usec(&philo->table->tv_start) / 10000, philo->id);
+		pthread_mutex_unlock(&philo->table->print);
+
+		return 1;
 	}
-	return 0;
+	else
+	{
+		pthread_mutex_unlock(&philo->table->forks_status_mutex);
+		return 0;
+	}
 }
 
 void *philosopher_routine(void *arg)
 {
 	t_philosopher *philo;
 	int						thinking;
+	long long			eating_time;
 
 	philo = (t_philosopher *)arg;
 	thinking = 0;
@@ -110,25 +104,26 @@ void *philosopher_routine(void *arg)
 		if (try_take_forks(philo))
 		{
 			pthread_mutex_lock(&philo->table->print);
-			printf("%lld %d is eating\n", time_stamp_in_usec(&philo->table->tv_start) / 10000, philo->id);
+			eating_time = time_stamp_in_usec(&philo->table->tv_start);
+			printf("%lld %d is eating\n", eating_time / 10000, philo->id);
+			philo->last_meal_time = eating_time;
 			pthread_mutex_unlock(&philo->table->print);
-			philo->last_meal_time = time_stamp_in_usec(&philo->table->tv_start);
 			philo->meals_eaten++;
 			smart_sleep(philo->table->args.time_to_eat, &philo->table->tv_start);
-
-			// Libera os garfos
 			if (philo->id % 2 == 0)
 			{
 				pthread_mutex_unlock(&philo->table->forks[philo->id % philo->table->args.number_of_philosophers]);
+				philo->table->forks_status[philo->id % philo->table->args.number_of_philosophers] = 0;
 				pthread_mutex_unlock(&philo->table->forks[philo->id - 1]);
+				philo->table->forks_status[philo->id - 1] = 0;
 			}
 			else
 			{
 				pthread_mutex_unlock(&philo->table->forks[philo->id - 1]);
+				philo->table->forks_status[philo->id - 1] = 0;
 				pthread_mutex_unlock(&philo->table->forks[philo->id % philo->table->args.number_of_philosophers]);
+				philo->table->forks_status[philo->id % philo->table->args.number_of_philosophers] = 0;
 			}
-
-			// Dorme
 			pthread_mutex_lock(&philo->table->print);
 			printf("%lld %d is sleeping\n", time_stamp_in_usec(&philo->table->tv_start) / 10000, philo->id);
 			pthread_mutex_unlock(&philo->table->print);

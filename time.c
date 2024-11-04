@@ -69,8 +69,8 @@ void smart_sleep(long long interval_in_ms, struct timeval *start)
 	target_time = now + interval_in_ms * 1000;
 	while (now < target_time)
 	{
-		if (target_time - now > 42)
-			usleep(42);
+		if (target_time - now > 1)
+			usleep(1);
 		else
 			usleep(target_time - now);
 		now = time_stamp_in_usec(start);
