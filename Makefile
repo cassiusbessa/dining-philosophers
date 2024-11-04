@@ -9,7 +9,8 @@ SRCS =		main.c\
 					print.c\
 					time.c\
 					table.c\
-					routine.c\
+					philo_routine.c\
+					monitor.c\
 
 
 philo = philo

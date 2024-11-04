@@ -103,12 +103,15 @@ void *philosopher_routine(void *arg)
 	{
 		if (try_take_forks(philo))
 		{
-			pthread_mutex_lock(&philo->table->print);
+			thinking = 0;
 			eating_time = time_stamp_in_usec(&philo->table->tv_start);
-			printf("%lld %d is eating\n", eating_time / 10000, philo->id);
+			pthread_mutex_lock(&philo->meal_mutex);
 			philo->last_meal_time = eating_time;
-			pthread_mutex_unlock(&philo->table->print);
 			philo->meals_eaten++;
+			pthread_mutex_unlock(&philo->meal_mutex);
+			pthread_mutex_lock(&philo->table->print);
+			printf("%lld %d is eating\n", eating_time / 10000, philo->id);
+			pthread_mutex_unlock(&philo->table->print);
 			smart_sleep(philo->table->args.time_to_eat, &philo->table->tv_start);
 			if (philo->id % 2 == 0)
 			{
@@ -128,7 +131,13 @@ void *philosopher_routine(void *arg)
 			printf("%lld %d is sleeping\n", time_stamp_in_usec(&philo->table->tv_start) / 10000, philo->id);
 			pthread_mutex_unlock(&philo->table->print);
 			smart_sleep(philo->table->args.time_to_sleep, &philo->table->tv_start);
-			thinking = 0;
+			if (!thinking)
+			{
+				pthread_mutex_lock(&philo->table->print);
+				printf("%lld %d is thinking\n", time_stamp_in_usec(&philo->table->tv_start) / 10000, philo->id);
+				pthread_mutex_unlock(&philo->table->print);
+				thinking = 1;
+			}
 		}
 		else
 		{

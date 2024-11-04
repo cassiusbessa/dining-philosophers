@@ -6,7 +6,7 @@
 /*   By: cassius <cassius@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/11/01 21:47:20 by cassius           #+#    #+#             */
-/*   Updated: 2024/11/03 02:35:40 by cassius          ###   ########.fr       */
+/*   Updated: 2024/11/04 00:01:26 by cassius          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -41,12 +41,14 @@ typedef struct s_table {
 	int							*forks_status;
 	pthread_mutex_t	forks_status_mutex;
 	pthread_mutex_t	print;
-	pthread_mutex_t	dead;
+	pthread_mutex_t	dead_mutex;
+	int							dead_flag;
 	t_arguments			args;
 	struct timeval	tv_start;
 } t_table;
 
 int	init_table(t_table *table, t_arguments args);
+
 
 typedef struct s_philosopher {
     int							id;
@@ -54,10 +56,13 @@ typedef struct s_philosopher {
     long						last_meal_time;
     pthread_t				thread;
     struct s_table	*table;
+		pthread_mutex_t	meal_mutex;
 } t_philosopher;
 
 int		init_philosophers(t_philosopher *philosophers, t_table *table);
 void	destroy_table(t_table *table);
 void *philosopher_routine(void *arg);
+
+int	monitor(t_table *table, t_philosopher *philos);
 
 #endif

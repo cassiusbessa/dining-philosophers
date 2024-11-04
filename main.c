@@ -33,6 +33,7 @@ int	main(int argc, char **argv)
 		}
 		i++;
 	}
+	monitor(&table, philosophers);
 	i = 0;
 	while (i < arguments.number_of_philosophers)
 	{
