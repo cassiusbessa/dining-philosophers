@@ -54,6 +54,7 @@ static int	check_arguments(int argc, char **argv)
 		printf("Error: wrong arguments\n");
 		return (-1);
 	}
+	return (1);
 }
 
 t_arguments	parser(int argc, char **argv)

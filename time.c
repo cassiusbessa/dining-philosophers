@@ -50,14 +50,17 @@
 //     	return 31;
 // }
 
-long long	time_stamp_in_usec(struct timeval *start)
+long long	time_stamp_in_ms(struct timeval *start)
 {
-	struct timeval	tv;
-	long long				time;
+	struct timeval			tv;
+	long long				now;
+	long long				start_time;
+
 
 	gettimeofday(&tv, NULL);
-	time = (tv.tv_sec - start->tv_sec) * 1000000 + (tv.tv_usec - start->tv_usec);
-	return time;
+	now = (tv.tv_sec * 1000) + (tv.tv_usec / 1000);
+	start_time = (start->tv_sec * 1000) + (start->tv_usec / 1000);
+	return (now - start_time);
 }
 
 void smart_sleep(long long interval_in_ms, struct timeval *start, t_philosopher *philo)
@@ -65,19 +68,14 @@ void smart_sleep(long long interval_in_ms, struct timeval *start, t_philosopher 
 	long long now;
 	long long target_time;
 
-	now = time_stamp_in_usec(start);
-	target_time = now + interval_in_ms * 1000;
+	now = time_stamp_in_ms(start);
+	target_time = now + interval_in_ms;
 	while (!has_death(philo->table, philo) && now < target_time)
 	{
-		if (target_time - now > 1)
-			usleep(1);
+		if (target_time - now > 400)
+			usleep(400);
 		else
 			usleep(target_time - now);
-		now = time_stamp_in_usec(start);
+		now = time_stamp_in_ms(start);
 	}
-}
-
-int	sleep_in_ms(int ms)
-{
-	return (usleep(ms * 1000));
 }

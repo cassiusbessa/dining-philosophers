@@ -7,8 +7,7 @@ int try_take_forks(t_philosopher *philo)
 	int left_fork = philo->id - 1;
 	int right_fork = philo->id % philo->table->args.number_of_philosophers;
 
-	if (philo->table->args.number_of_philosophers == 1)
-		return 0;
+
 	pthread_mutex_lock(&philo->table->forks_status_mutex);
 	if (philo->table->forks_status[left_fork] == 0 && philo->table->forks_status[right_fork] == 0)
 	{
@@ -28,8 +27,8 @@ int try_take_forks(t_philosopher *philo)
 		if (!has_death(philo->table, philo))
 		{
 		pthread_mutex_lock(&philo->table->print);
-		printf("%lld %d has taken a fork\n", time_stamp_in_usec(&philo->table->tv_start) / 1000, philo->id);
-		printf("%lld %d has taken a fork\n", time_stamp_in_usec(&philo->table->tv_start) / 1000, philo->id);
+		printf("%lld %d has taken a fork\n", time_stamp_in_ms(&philo->table->tv_start), philo->id);
+		printf("%lld %d has taken a fork\n", time_stamp_in_ms(&philo->table->tv_start), philo->id);
 		pthread_mutex_unlock(&philo->table->print);
 		}
 		return 1;
@@ -51,17 +50,17 @@ void *philosopher_routine(void *arg)
 	thinking = 0;
 	while (!has_death(philo->table, philo) && 1)
 	{
-		if (!has_death(philo->table, philo) && try_take_forks(philo))
+		if (try_take_forks(philo))
 		{
 			pthread_mutex_lock(&philo->table->dead_mutex);
 			thinking = 0;
-			eating_time = time_stamp_in_usec(&philo->table->tv_start);
+			eating_time = time_stamp_in_ms(&philo->table->tv_start);
 			pthread_mutex_lock(&philo->meal_mutex);
 			philo->last_meal_time = eating_time;
 			philo->meals_eaten++;
 			pthread_mutex_unlock(&philo->meal_mutex);
 			pthread_mutex_lock(&philo->table->print);
-			printf("%lld %d is eating\n", eating_time / 1000, philo->id);
+			printf("%lld %d is eating\n", eating_time, philo->id);
 			pthread_mutex_unlock(&philo->table->print);
 			pthread_mutex_unlock(&philo->table->dead_mutex);
 			smart_sleep(philo->table->args.time_to_eat, &philo->table->tv_start, philo);
@@ -82,14 +81,14 @@ void *philosopher_routine(void *arg)
 			if (!has_death(philo->table, philo))
 			{
 				pthread_mutex_lock(&philo->table->print);
-				printf("%lld %d is sleeping\n", time_stamp_in_usec(&philo->table->tv_start) / 1000, philo->id);
+				printf("%lld %d is sleeping\n", time_stamp_in_ms(&philo->table->tv_start), philo->id);
 				pthread_mutex_unlock(&philo->table->print);
 				smart_sleep(philo->table->args.time_to_sleep, &philo->table->tv_start, philo);
 			}
 			if (!has_death(philo->table, philo) && !thinking)
 			{
 				pthread_mutex_lock(&philo->table->print);
-				printf("%lld %d is thinking\n", time_stamp_in_usec(&philo->table->tv_start) / 1000, philo->id);
+				printf("%lld %d is thinking\n", time_stamp_in_ms(&philo->table->tv_start), philo->id);
 				pthread_mutex_unlock(&philo->table->print);
 				thinking = 1;
 			}
@@ -99,12 +98,13 @@ void *philosopher_routine(void *arg)
 			if (!has_death(philo->table, philo) && !thinking)
 			{
 				pthread_mutex_lock(&philo->table->print);
-				printf("%lld %d is thinking\n", time_stamp_in_usec(&philo->table->tv_start) / 1000, philo->id);
+				printf("%lld %d is thinking\n", time_stamp_in_ms(&philo->table->tv_start), philo->id);
 				thinking = 1;
 				pthread_mutex_unlock(&philo->table->print);
 			}
 		}
 	}
+	return (NULL);
 }
 
 int	has_death(t_table *table, t_philosopher *philo)
@@ -116,4 +116,5 @@ int	has_death(t_table *table, t_philosopher *philo)
 		return 1;
 	}
 	pthread_mutex_unlock(&table->dead_mutex);
+	return (0);
 }
