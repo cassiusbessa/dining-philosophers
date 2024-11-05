@@ -54,14 +54,13 @@ void *philosopher_routine(void *arg)
 		{
 			pthread_mutex_lock(&philo->table->dead_mutex);
 			thinking = 0;
-			eating_time = time_stamp_in_ms(&philo->table->tv_start);
+			pthread_mutex_lock(&philo->table->print);
+			printf("%lld %d is eating\n", time_stamp_in_ms(&philo->table->tv_start), philo->id);
+			pthread_mutex_unlock(&philo->table->print);
 			pthread_mutex_lock(&philo->meal_mutex);
-			philo->last_meal_time = eating_time;
+			philo->last_meal_time = time_stamp_in_ms(&philo->table->tv_start);
 			philo->meals_eaten++;
 			pthread_mutex_unlock(&philo->meal_mutex);
-			pthread_mutex_lock(&philo->table->print);
-			printf("%lld %d is eating\n", eating_time, philo->id);
-			pthread_mutex_unlock(&philo->table->print);
 			pthread_mutex_unlock(&philo->table->dead_mutex);
 			smart_sleep(philo->table->args.time_to_eat, &philo->table->tv_start, philo);
 			if (philo->id % 2 == 0)
