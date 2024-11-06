@@ -93,6 +93,7 @@ void *philosopher_routine(void *arg)
 				pthread_mutex_lock(&philo->table->print);
 				printf("%lld %d is thinking\n", time_stamp_in_ms(&philo->table->tv_start), philo->id);
 				pthread_mutex_unlock(&philo->table->print);
+				smart_sleep(5, &philo->table->tv_start, philo);
 				thinking = 1;
 			}
 		}
@@ -104,6 +105,7 @@ void *philosopher_routine(void *arg)
 				printf("%lld %d is thinking\n", time_stamp_in_ms(&philo->table->tv_start), philo->id);
 				thinking = 1;
 				pthread_mutex_unlock(&philo->table->print);
+				smart_sleep(5, &philo->table->tv_start, philo);
 			}
 		}
 	}
