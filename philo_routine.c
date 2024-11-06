@@ -26,10 +26,10 @@ int try_take_forks(t_philosopher *philo)
 		}
 		if (!has_death(philo->table, philo))
 		{
-		pthread_mutex_lock(&philo->table->print);
-		printf("%lld %d has taken a fork\n", time_stamp_in_ms(&philo->table->tv_start), philo->id);
-		printf("%lld %d has taken a fork\n", time_stamp_in_ms(&philo->table->tv_start), philo->id);
-		pthread_mutex_unlock(&philo->table->print);
+			pthread_mutex_lock(&philo->table->print);
+			printf("%lld %d has taken a fork\n", time_stamp_in_ms(&philo->table->tv_start), philo->id);
+			printf("%lld %d has taken a fork\n", time_stamp_in_ms(&philo->table->tv_start), philo->id);
+			pthread_mutex_unlock(&philo->table->print);
 		}
 		return 1;
 	}
@@ -66,18 +66,18 @@ void *philosopher_routine(void *arg)
 			if (philo->id % 2 == 0)
 			{
 				pthread_mutex_unlock(&philo->table->forks[philo->id % philo->table->args.number_of_philosophers]);
-				philo->table->forks_status[philo->id % philo->table->args.number_of_philosophers] = 0;
 				pthread_mutex_unlock(&philo->table->forks[philo->id - 1]);
 				pthread_mutex_lock(&philo->table->forks_status_mutex);
+				philo->table->forks_status[philo->id % philo->table->args.number_of_philosophers] = 0;
 				philo->table->forks_status[philo->id - 1] = 0;
 				pthread_mutex_unlock(&philo->table->forks_status_mutex);
 			}
 			else
 			{
 				pthread_mutex_unlock(&philo->table->forks[philo->id - 1]);
-				philo->table->forks_status[philo->id - 1] = 0;
 				pthread_mutex_unlock(&philo->table->forks[philo->id % philo->table->args.number_of_philosophers]);
 				pthread_mutex_lock(&philo->table->forks_status_mutex);
+				philo->table->forks_status[philo->id - 1] = 0;
 				philo->table->forks_status[philo->id % philo->table->args.number_of_philosophers] = 0;
 				pthread_mutex_unlock(&philo->table->forks_status_mutex);
 			}

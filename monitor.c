@@ -18,7 +18,7 @@ int	monitor(t_table *table, t_philosopher *philos)
 			if (dead)
 			{
 				pthread_mutex_lock(&table->print);
-				printf("%lld %d died because last meals as eaten at %lld\n", time_stamp_in_ms(&table->tv_start), dead, philos[i].last_meal_time);
+				printf("%lld %d died\n", time_stamp_in_ms(&table->tv_start), dead);
 				pthread_mutex_unlock(&table->print);
 				return (dead);
 			}
