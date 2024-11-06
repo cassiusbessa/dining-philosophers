@@ -70,12 +70,9 @@ void smart_sleep(long long interval_in_ms, struct timeval *start, t_philosopher 
 
 	now = time_stamp_in_ms(start);
 	target_time = now + interval_in_ms;
-	while (!has_death(philo->table, philo) && now < target_time)
+	while (now < target_time)
 	{
-		if (target_time - now > 400)
-			usleep(400);
-		else
-			usleep(target_time - now);
+		usleep(200);
 		now = time_stamp_in_ms(start);
 	}
 }

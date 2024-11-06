@@ -48,34 +48,38 @@ void *philosopher_routine(void *arg)
 
 	philo = (t_philosopher *)arg;
 	thinking = 0;
-	while (!has_death(philo->table, philo) && 1)
+	while (!has_death(philo->table, philo) && (philo->meals_eaten < philo->table->args.number_of_times_each_philosopher_must_eat || philo->table->args.number_of_times_each_philosopher_must_eat == -1)  && 1)
 	{
 		if (try_take_forks(philo))
 		{
-			pthread_mutex_lock(&philo->table->dead_mutex);
+			//pthread_mutex_lock(&philo->table->dead_mutex);
 			thinking = 0;
-			pthread_mutex_lock(&philo->table->print);
-			printf("%lld %d is eating\n", time_stamp_in_ms(&philo->table->tv_start), philo->id);
-			pthread_mutex_unlock(&philo->table->print);
 			pthread_mutex_lock(&philo->meal_mutex);
 			philo->last_meal_time = time_stamp_in_ms(&philo->table->tv_start);
 			philo->meals_eaten++;
 			pthread_mutex_unlock(&philo->meal_mutex);
-			pthread_mutex_unlock(&philo->table->dead_mutex);
+			pthread_mutex_lock(&philo->table->print);
+			printf("%lld %d is eating\n", time_stamp_in_ms(&philo->table->tv_start), philo->id);
+			pthread_mutex_unlock(&philo->table->print);
+			//pthread_mutex_unlock(&philo->table->dead_mutex);
 			smart_sleep(philo->table->args.time_to_eat, &philo->table->tv_start, philo);
 			if (philo->id % 2 == 0)
 			{
 				pthread_mutex_unlock(&philo->table->forks[philo->id % philo->table->args.number_of_philosophers]);
 				philo->table->forks_status[philo->id % philo->table->args.number_of_philosophers] = 0;
 				pthread_mutex_unlock(&philo->table->forks[philo->id - 1]);
+				pthread_mutex_lock(&philo->table->forks_status_mutex);
 				philo->table->forks_status[philo->id - 1] = 0;
+				pthread_mutex_unlock(&philo->table->forks_status_mutex);
 			}
 			else
 			{
 				pthread_mutex_unlock(&philo->table->forks[philo->id - 1]);
 				philo->table->forks_status[philo->id - 1] = 0;
 				pthread_mutex_unlock(&philo->table->forks[philo->id % philo->table->args.number_of_philosophers]);
+				pthread_mutex_lock(&philo->table->forks_status_mutex);
 				philo->table->forks_status[philo->id % philo->table->args.number_of_philosophers] = 0;
+				pthread_mutex_unlock(&philo->table->forks_status_mutex);
 			}
 			if (!has_death(philo->table, philo))
 			{

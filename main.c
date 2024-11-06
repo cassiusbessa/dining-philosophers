@@ -9,6 +9,7 @@ int	main(int argc, char **argv)
 	int							i;
 
 	arguments = parser(argc, argv);
+	print_args(arguments);
 	if (arguments.error)
 		return (1);
 	init_table(&table, arguments);
@@ -26,7 +27,7 @@ int	main(int argc, char **argv)
 		if (pthread_create(&philosophers[i].thread, NULL, philosopher_routine, &philosophers[i]))
 		{
 			while (--i >= 0)
-      	pthread_join(philosophers[i].thread, NULL);
+      			pthread_join(philosophers[i].thread, NULL);
 			destroy_table(&table);
 			free(philosophers);
 			return (1);
