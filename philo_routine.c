@@ -52,7 +52,6 @@ void *philosopher_routine(void *arg)
 	{
 		if (try_take_forks(philo))
 		{
-			//pthread_mutex_lock(&philo->table->dead_mutex);
 			thinking = 0;
 			pthread_mutex_lock(&philo->meal_mutex);
 			philo->last_meal_time = time_stamp_in_ms(&philo->table->tv_start);
@@ -61,7 +60,6 @@ void *philosopher_routine(void *arg)
 			pthread_mutex_lock(&philo->table->print);
 			printf("%lld %d is eating\n", time_stamp_in_ms(&philo->table->tv_start), philo->id);
 			pthread_mutex_unlock(&philo->table->print);
-			//pthread_mutex_unlock(&philo->table->dead_mutex);
 			smart_sleep(philo->table->args.time_to_eat, &philo->table->tv_start, philo);
 			if (philo->id % 2 == 0)
 			{
