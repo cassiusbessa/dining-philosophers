@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   monitor.c                                          :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: cassius <cassius@student.42.fr>            +#+  +:+       +#+        */
+/*   By: caqueiro <caqueiro@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2024/11/07 11:21:52 by cassius           #+#    #+#             */
-/*   Updated: 2024/11/07 11:29:58 by cassius          ###   ########.fr       */
+/*   Created: 2024/11/07 11:21:52 by caqueiro           #+#    #+#             */
+/*   Updated: 2024/11/07 11:29:58 by caqueiro          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -43,14 +43,14 @@ int	starvation_calculator(t_table *table, t_philosopher *philo)
 {
 	pthread_mutex_lock(&philo->meal_mutex);
 	if (((long long)table->args.time_to_die)
-		< (time_stamp_in_ms(&table->tv_start) - philo->last_meal_time))
+		< (ms_time(&table->tv_start) - philo->last_meal_time))
 	{
 		pthread_mutex_unlock(&philo->meal_mutex);
 		pthread_mutex_lock(&table->dead_mutex);
 		table->dead_flag = 1;
 		pthread_mutex_unlock(&table->dead_mutex);
 		pthread_mutex_lock(&table->print);
-		printf("%lld %d died\n", time_stamp_in_ms(&table->tv_start), philo->id);
+		printf("%lld %d died\n", ms_time(&table->tv_start), philo->id);
 		pthread_mutex_unlock(&table->print);
 		return (philo->id);
 	}

@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   philo.h                                            :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: cassius <cassius@student.42.fr>            +#+  +:+       +#+        */
+/*   By: caqueiro <caqueiro@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2024/11/01 21:47:20 by cassius           #+#    #+#             */
-/*   Updated: 2024/11/07 12:16:15 by cassius          ###   ########.fr       */
+/*   Created: 2024/11/01 21:47:20 by caqueiro           #+#    #+#             */
+/*   Updated: 2024/11/07 12:16:15 by caqueiro          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -34,7 +34,7 @@ t_arguments			parser(int argc, char **argv);
 void				print_args(t_arguments args);
 
 int					sleep_in_ms(int ms);
-long long			time_stamp_in_ms(struct timeval *start);
+long long			ms_time(struct timeval *start);
 
 typedef struct s_table
 {

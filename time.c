@@ -50,7 +50,7 @@
 //     	return 31;
 // }
 
-long long	time_stamp_in_ms(struct timeval *start)
+long long	ms_time(struct timeval *start)
 {
 	struct timeval			tv;
 	long long				now;
@@ -68,11 +68,11 @@ void smart_sleep(long long interval_in_ms, struct timeval *start, t_philosopher 
 	long long now;
 	long long target_time;
 
-	now = time_stamp_in_ms(start);
+	now = ms_time(start);
 	target_time = now + interval_in_ms;
 	while (now < target_time)
 	{
 		usleep(200);
-		now = time_stamp_in_ms(start);
+		now = ms_time(start);
 	}
 }
