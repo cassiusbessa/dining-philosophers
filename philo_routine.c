@@ -1,6 +1,8 @@
 #include "philo.h"
 
 int	has_death(t_table *table, t_philosopher *philo);
+static void	think(t_philosopher *philo, int *thinking);
+static void	sleep_routine(t_philosopher *philo);
 
 int try_take_forks(t_philosopher *philo)
 {
@@ -79,33 +81,12 @@ void *philosopher_routine(void *arg)
 				philo->table->forks_status[philo->id % philo->table->args.number_of_philosophers] = 0;
 				pthread_mutex_unlock(&philo->table->forks_status_mutex);
 			}
-			if (!has_death(philo->table, philo))
-			{
-				pthread_mutex_lock(&philo->table->print);
-				printf("%lld %d is sleeping\n", time_stamp_in_ms(&philo->table->tv_start), philo->id);
-				pthread_mutex_unlock(&philo->table->print);
-				smart_sleep(philo->table->args.time_to_sleep, &philo->table->tv_start, philo);
-			}
+			sleep_routine(philo);
 			if (!has_death(philo->table, philo) && !thinking)
-			{
-				pthread_mutex_lock(&philo->table->print);
-				printf("%lld %d is thinking\n", time_stamp_in_ms(&philo->table->tv_start), philo->id);
-				pthread_mutex_unlock(&philo->table->print);
-				smart_sleep(5, &philo->table->tv_start, philo);
-				thinking = 1;
-			}
+				think(philo, &thinking);
 		}
 		else
-		{
-			if (!has_death(philo->table, philo) && !thinking)
-			{
-				pthread_mutex_lock(&philo->table->print);
-				printf("%lld %d is thinking\n", time_stamp_in_ms(&philo->table->tv_start), philo->id);
-				thinking = 1;
-				pthread_mutex_unlock(&philo->table->print);
-				smart_sleep(5, &philo->table->tv_start, philo);
-			}
-		}
+			think(philo, &thinking);
 	}
 	return (NULL);
 }
@@ -120,4 +101,27 @@ int	has_death(t_table *table, t_philosopher *philo)
 	}
 	pthread_mutex_unlock(&table->dead_mutex);
 	return (0);
+}
+
+static void	think(t_philosopher *philo, int *thinking)
+{
+	if (!has_death(philo->table, philo) && !*thinking)
+	{
+		pthread_mutex_lock(&philo->table->print);
+		printf("%lld %d is thinking\n", time_stamp_in_ms(&philo->table->tv_start), philo->id);
+		pthread_mutex_unlock(&philo->table->print);
+		smart_sleep(5, &philo->table->tv_start, philo);
+		*thinking = 1;
+	}
+}
+
+static void	sleep_routine(t_philosopher *philo)
+{
+	if (!has_death(philo->table, philo))
+	{
+		pthread_mutex_lock(&philo->table->print);
+		printf("%lld %d is sleeping\n", time_stamp_in_ms(&philo->table->tv_start), philo->id);
+		pthread_mutex_unlock(&philo->table->print);
+		smart_sleep(philo->table->args.time_to_sleep, &philo->table->tv_start, philo);
+	}
 }
