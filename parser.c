@@ -71,10 +71,10 @@ t_arguments	parser(int argc, char **argv)
 	arguments.time_to_die = ft_atoi(argv[2]);
 	arguments.time_to_eat = ft_atoi(argv[3]);
 	arguments.time_to_sleep = ft_atoi(argv[4]);
-	arguments.number_of_times_each_philosopher_must_eat = 0;
+	arguments.max_philo_eat = 0;
 	if (argc == 6)
-		arguments.number_of_times_each_philosopher_must_eat = ft_atoi(argv[5]);
+		arguments.max_philo_eat = ft_atoi(argv[5]);
 	else
-		arguments.number_of_times_each_philosopher_must_eat = -1;
+		arguments.max_philo_eat = -1;
 	return (arguments);
 }

@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   philo.h                                            :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: caqueiro <caqueiro@student.42.fr>          +#+  +:+       +#+        */
+/*   By: cassius <cassius@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/11/01 21:47:20 by cassius           #+#    #+#             */
-/*   Updated: 2024/11/04 19:24:23 by caqueiro         ###   ########.fr       */
+/*   Updated: 2024/11/07 11:27:58 by cassius          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -25,7 +25,7 @@ typedef struct s_arguments {
 	int time_to_die;
 	int time_to_eat;
 	int time_to_sleep;
-	int number_of_times_each_philosopher_must_eat;
+	int max_philo_eat;
 	int	error;
 } t_arguments;
 

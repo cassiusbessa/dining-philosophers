@@ -48,7 +48,7 @@ void *philosopher_routine(void *arg)
 
 	philo = (t_philosopher *)arg;
 	thinking = 0;
-	while (!has_death(philo->table, philo) && (philo->meals_eaten < philo->table->args.number_of_times_each_philosopher_must_eat || philo->table->args.number_of_times_each_philosopher_must_eat == -1)  && 1)
+	while (!has_death(philo->table, philo) && (philo->meals_eaten < philo->table->args.max_philo_eat || philo->table->args.max_philo_eat == -1)  && 1)
 	{
 		if (try_take_forks(philo))
 		{
