@@ -6,7 +6,7 @@
 /*   By: caqueiro <caqueiro@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/11/07 19:58:44 by caqueiro          #+#    #+#             */
-/*   Updated: 2024/11/07 20:33:42 by caqueiro         ###   ########.fr       */
+/*   Updated: 2024/11/07 21:59:32 by caqueiro         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -17,6 +17,7 @@ static void	think(t_philosopher *philo, int *thinking);
 static void	sleep_routine(t_philosopher *philo);
 static int	take_fork(t_philosopher *philo);
 static int	release_fork(t_philosopher *philo);
+static void	eat(t_philosopher *philo);
 
 int	try_take_forks(t_philosopher *philo)
 {
@@ -57,16 +58,7 @@ void	*philosopher_routine(void *arg)
 		if (try_take_forks(philo))
 		{
 			thinking = 0;
-			pthread_mutex_lock(&philo->meal_mutex);
-			philo->last_meal_time = ms_time(&philo->table->tv_start);
-			philo->meals_eaten++;
-			pthread_mutex_unlock(&philo->meal_mutex);
-			pthread_mutex_lock(&philo->table->print);
-			printf("%lld %d is eating\n",
-				ms_time(&philo->table->tv_start), philo->id);
-			pthread_mutex_unlock(&philo->table->print);
-			smart_sleep(philo->table->args.time_to_eat, &philo->table->tv_start,
-				philo);
+			eat(philo);
 			release_fork(philo);
 			sleep_routine(philo);
 			if (!has_death(philo->table, philo) && !thinking)
@@ -118,8 +110,8 @@ static void	sleep_routine(t_philosopher *philo)
 
 static int	take_fork(t_philosopher *philo)
 {
-	int left_fork;
-	int right_fork;
+	int	left_fork;
+	int	right_fork;
 
 	left_fork = philo->id - 1;
 	right_fork = philo->id % philo->table->args.number_of_philosophers;
@@ -168,5 +160,19 @@ static int	release_fork(t_philosopher *philo)
 			% philo->table->args.number_of_philosophers] = 0;
 		pthread_mutex_unlock(&philo->table->forks_status_mutex);
 	}
+}
 
+static void	eat(t_philosopher *philo)
+{
+
+	pthread_mutex_lock(&philo->meal_mutex);
+	philo->last_meal_time = ms_time(&philo->table->tv_start);
+	philo->meals_eaten++;
+	pthread_mutex_unlock(&philo->meal_mutex);
+	pthread_mutex_lock(&philo->table->print);
+	printf("%lld %d is eating\n",
+		ms_time(&philo->table->tv_start), philo->id);
+	pthread_mutex_unlock(&philo->table->print);
+	smart_sleep(philo->table->args.time_to_eat, &philo->table->tv_start,
+		philo);
 }

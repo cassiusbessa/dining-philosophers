@@ -35,6 +35,7 @@ int	monitor(t_table *table, t_philosopher *philos)
 		}
 		if (dead)
 			return (1);
+		usleep(3);
 	}
 	return (0);
 }
