@@ -1,3 +1,15 @@
+/* ************************************************************************** */
+/*                                                                            */
+/*                                                        :::      ::::::::   */
+/*   table.c                                            :+:      :+:    :+:   */
+/*                                                    +:+ +:+         +:+     */
+/*   By: caqueiro <caqueiro@student.42.fr>          +#+  +:+       +#+        */
+/*                                                +#+#+#+#+#+   +#+           */
+/*   Created: 2024/11/07 23:14:58 by caqueiro          #+#    #+#             */
+/*   Updated: 2024/11/07 23:16:32 by caqueiro         ###   ########.fr       */
+/*                                                                            */
+/* ************************************************************************** */
+
 #include "philo.h"
 
 static int	init_forks_status(t_table *table, t_arguments args);
@@ -36,7 +48,7 @@ int	init_philosophers(t_philosopher *philosophers, t_table *table)
 			while (i > 0)
 				pthread_mutex_destroy(&philosophers[i--].meal_mutex);
 			return (1);
-		} 
+		}
 		i++;
 	}
 	return (0);
@@ -62,6 +74,7 @@ void	destroy_table(t_table *table)
 static int	init_forks_status(t_table *table, t_arguments args)
 {
 	int	i;
+
 	table->forks_status = malloc(sizeof(int) * args.number_of_philosophers);
 	if (!table->forks_status)
 		return (1);
@@ -78,7 +91,8 @@ static int	init_forks_mutex(t_table *table, t_arguments args)
 {
 	int	i;
 
-	table->forks = malloc(sizeof(pthread_mutex_t) * args.number_of_philosophers);
+	table->forks = malloc(sizeof(pthread_mutex_t)
+			* args.number_of_philosophers);
 	if (!table->forks)
 		return (-1);
 	i = 0;

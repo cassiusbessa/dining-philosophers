@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   philo.h                                            :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: caqueiro <caqueiro@student.42.fr>            +#+  +:+       +#+        */
+/*   By: caqueiro <caqueiro@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2024/11/01 21:47:20 by caqueiro           #+#    #+#             */
-/*   Updated: 2024/11/07 12:16:15 by caqueiro          ###   ########.fr       */
+/*   Created: 2024/11/07 23:13:34 by caqueiro          #+#    #+#             */
+/*   Updated: 2024/11/07 23:13:37 by caqueiro         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -33,7 +33,6 @@ typedef struct s_arguments
 t_arguments			parser(int argc, char **argv);
 void				print_args(t_arguments args);
 
-int					sleep_in_ms(int ms);
 long long			ms_time(struct timeval *start);
 
 typedef struct s_table
@@ -67,6 +66,12 @@ void				*philosopher_routine(void *arg);
 void				smart_sleep(long long interval, struct timeval *start,
 						t_philosopher *philo);
 int					has_death(t_table *table, t_philosopher *philo);
+
+void				think(t_philosopher *philo, int *thinking);
+void				sleep_routine(t_philosopher *philo);
+int					try_take_forks(t_philosopher *philo);
+void				release_fork(t_philosopher *philo);
+void				eat(t_philosopher *philo);
 
 int					monitor(t_table *table, t_philosopher *philos);
 

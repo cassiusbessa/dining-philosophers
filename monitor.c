@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   monitor.c                                          :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: caqueiro <caqueiro@student.42.fr>            +#+  +:+       +#+        */
+/*   By: caqueiro <caqueiro@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2024/11/07 11:21:52 by caqueiro           #+#    #+#             */
-/*   Updated: 2024/11/07 11:29:58 by caqueiro          ###   ########.fr       */
+/*   Created: 2024/11/07 23:12:54 by caqueiro          #+#    #+#             */
+/*   Updated: 2024/11/07 23:12:58 by caqueiro         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -33,9 +33,9 @@ int	monitor(t_table *table, t_philosopher *philos)
 				dead = all_philos_max_meals_eaten(table, philos);
 			i++;
 		}
+		usleep(500);
 		if (dead)
 			return (1);
-		usleep(3);
 	}
 	return (0);
 }

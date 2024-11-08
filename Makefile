@@ -6,11 +6,12 @@ CURSIVE		=	\e[33;3m
 
 SRCS =		main.c\
 					parser.c\
-					print.c\
 					time.c\
 					table.c\
 					philo_routine.c\
-					monitor.c\
+					actions.c\
+					fork.c\
+					monitor.c
 
 
 philo = philo
